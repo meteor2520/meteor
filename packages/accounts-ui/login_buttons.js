@@ -7,12 +7,18 @@
   var IN_SIGNUP_FLOW_KEY = 'Meteor.loginButtons.inSignupFlow';
   var IN_FORGOT_PASSWORD_FLOW_KEY = 'Meteor.loginButtons.inForgotPasswordFlow';
   var ERROR_MESSAGE_KEY = 'Meteor.loginButtons.errorMessage';
+  var INFO_MESSAGE_KEY = 'Meteor.loginButtons.infoMessage';
 
   var resetSession = function () {
     Session.set(IN_SIGNUP_FLOW_KEY, false);
     Session.set(IN_FORGOT_PASSWORD_FLOW_KEY, false);
     Session.set(DROPDOWN_VISIBLE_KEY, false);
+    resetMessages();
+  };
+
+  var resetMessages = function () {
     Session.set(ERROR_MESSAGE_KEY, null);
+    Session.set(INFO_MESSAGE_KEY, null);
   };
 
 
@@ -91,12 +97,12 @@
       loginOrSignup();
     },
     'click #signup-link': function () {
-      Session.set(ERROR_MESSAGE_KEY, null);
+      resetMessages();
       Session.set(IN_SIGNUP_FLOW_KEY, true);
       Session.set(IN_FORGOT_PASSWORD_FLOW_KEY, false);
     },
     'click #forgot-password-link': function () {
-      Session.set(ERROR_MESSAGE_KEY, null);
+      resetMessages();
       Session.set(IN_SIGNUP_FLOW_KEY, false);
       Session.set(IN_FORGOT_PASSWORD_FLOW_KEY, true);
     },
@@ -127,8 +133,12 @@
   // loginButtonsServicesRowDynamicPart template
   //
 
-  Template.loginButtonsServicesRowDynamicPart.errorMessage = function () {
+  // xcxc move this?
+  Template.loginButtonsMessages.errorMessage = function () {
     return Session.get(ERROR_MESSAGE_KEY);
+  };
+  Template.loginButtonsMessages.infoMessage = function () {
+    return Session.get(INFO_MESSAGE_KEY);
   };
 
   Template.loginButtonsServicesRowDynamicPart.inLoginFlow = function () {
@@ -140,10 +150,35 @@
   };
 
   // xcxc move to the right place in the file or something
-  Template.loginButtonsServicesDropdown.xcxcIsForgotPasswordFlow = function () {
+  Template.loginButtonsServicesRow.xcxcIsForgotPasswordFlow = function () {
     return Session.get(IN_FORGOT_PASSWORD_FLOW_KEY);
   };
+  // xcxc move this too
+  Template.forgotPasswordForm.events = {
+    'keypress #forgot-password-email': function (event) {
+      if (event.keyCode === 13)
+        forgotPassword();
+    },
+    'click #login-buttons-forgot-password': function () {
+      forgotPassword();
+    }
+  };
 
+  var forgotPassword = function () {
+    resetMessages();
+
+    var email = document.getElementById("forgot-password-email").value;
+    if (email.indexOf('@') !== -1) {
+      Meteor.call("forgotPassword", {email: email}, function (error) {
+        if (error)
+          Session.set(ERROR_MESSAGE_KEY, error.reason);
+        else
+          Session.set(INFO_MESSAGE_KEY, "Email sent");
+      });
+    } else {
+      Session.set(ERROR_MESSAGE_KEY, "Invalid email");
+    }
+  };
 
   //
   // loginButtonsServicesDropdown template
@@ -183,6 +218,7 @@
   //
 
   var login = function () {
+    resetMessages();
     var username = document.getElementById('login-username').value;
     var password = document.getElementById('login-password').value;
 
@@ -194,6 +230,7 @@
   };
 
   var signup = function () {
+    resetMessages();
     var username = document.getElementById('login-username').value;
     var password = document.getElementById('login-password').value;
     var passwordAgain = document.getElementById('login-password-again').value;

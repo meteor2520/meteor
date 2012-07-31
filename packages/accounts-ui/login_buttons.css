@@ -132,14 +132,21 @@
     width: 162px;
 }
 
-#login-buttons #login-buttons-password {
+#login-buttons .login-button-form-submit {
     margin-top: 8px;
+}
+
+#login-buttons .message {
+    font-size: 80%;
+    margin-top: 2px;
 }
 
 #login-buttons .error-message {
     color: red;
-    font-size: 80%;
-    margin-top: 2px;
+}
+
+#login-buttons .info-message {
+    color: green;
 }
 
 #login-buttons .additional-link {
