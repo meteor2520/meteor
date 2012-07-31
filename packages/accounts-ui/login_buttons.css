@@ -142,7 +142,14 @@
     margin-top: 2px;
 }
 
+#login-buttons .additional-link {
+    font-size: 60%;
+}
+
 #login-buttons #signup-link {
     float: right;
-    font-size: 70%;
+}
+
+#login-buttons #forgot-password-link {
+    float: left;
 }

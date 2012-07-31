@@ -5,10 +5,12 @@
 
   var DROPDOWN_VISIBLE_KEY = 'Meteor.loginButtons.dropdownVisible';
   var IN_SIGNUP_FLOW_KEY = 'Meteor.loginButtons.inSignupFlow';
+  var IN_FORGOT_PASSWORD_FLOW_KEY = 'Meteor.loginButtons.inForgotPasswordFlow';
   var ERROR_MESSAGE_KEY = 'Meteor.loginButtons.errorMessage';
 
   var resetSession = function () {
     Session.set(IN_SIGNUP_FLOW_KEY, false);
+    Session.set(IN_FORGOT_PASSWORD_FLOW_KEY, false);
     Session.set(DROPDOWN_VISIBLE_KEY, false);
     Session.set(ERROR_MESSAGE_KEY, null);
   };
@@ -91,6 +93,12 @@
     'click #signup-link': function () {
       Session.set(ERROR_MESSAGE_KEY, null);
       Session.set(IN_SIGNUP_FLOW_KEY, true);
+      Session.set(IN_FORGOT_PASSWORD_FLOW_KEY, false);
+    },
+    'click #forgot-password-link': function () {
+      Session.set(ERROR_MESSAGE_KEY, null);
+      Session.set(IN_SIGNUP_FLOW_KEY, false);
+      Session.set(IN_FORGOT_PASSWORD_FLOW_KEY, true);
     },
     'keypress #login-username,#login-password,#login-password-again': function (event) {
       if (event.keyCode === 13)
@@ -123,8 +131,17 @@
     return Session.get(ERROR_MESSAGE_KEY);
   };
 
+  Template.loginButtonsServicesRowDynamicPart.inLoginFlow = function () {
+    return !Session.get(IN_SIGNUP_FLOW_KEY) && !Session.get(IN_FORGOT_PASSWORD_FLOW_KEY);
+  };
+
   Template.loginButtonsServicesRowDynamicPart.inSignupFlow = function () {
     return Session.get(IN_SIGNUP_FLOW_KEY);
+  };
+
+  // xcxc move to the right place in the file or something
+  Template.loginButtonsServicesDropdown.xcxcIsForgotPasswordFlow = function () {
+    return Session.get(IN_FORGOT_PASSWORD_FLOW_KEY);
   };
 
 

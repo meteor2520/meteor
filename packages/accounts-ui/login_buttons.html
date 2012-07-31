@@ -37,7 +37,7 @@
           <span class="hline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </div>
       {{/if}}
-      <div class="login-password-form">
+      <div class="login-form login-password-form">
         <label id="login-username-label" for="login-username">Username</label>
         <input id="login-username"/>
 
@@ -74,9 +74,15 @@
     {{/if}}
   </div>
 
-  {{#unless inSignupFlow}}
-  <a id="signup-link">Create account</a>
-  {{/unless}}
+  {{#if inLoginFlow}}
+  <div class="additional-link-container">
+    <a id="signup-link" class="additional-link">Create account</a>
+  </div>
+
+  <div class="additional-link-container">
+    <a id="forgot-password-link" class="additional-link">Forgot password</a>
+  </div>
+  {{/if}}
 </template>
 
 <template name="loginButtonsServicesDropdown">
@@ -86,8 +92,16 @@
     <div id="login-dropdown-list">
       <a class="login-close-text">Close</a>
       <div class="login-close-text-clear"></div>
+      {{#if xcxcIsForgotPasswordFlow}}
+      {{> forgotPasswordForm}}
+      {{else}}
       {{> loginButtonsServicesRow}}
+      {{/if}}
     </div>
-    {{/if}}
+    {{/unless}}
   </div>
+</template>
+
+<template name="forgotPasswordForm">
+  xcxc
 </template>
