@@ -74,7 +74,7 @@
       // the old password.
 
       // XXX && Meteor.accounts.config.unsafePasswordChanges check here!
-      if (!options.M && false /*xcxc*/) {
+      if (!options.M) {
         throw new Meteor.Error(500, "XXX no oldPassword unimplemented");
       }
 
@@ -160,6 +160,21 @@
       // xcxc
       // xcxc construct url based on hostname? how do we know the hostname?
       Meteor.mail.send(email, "token is " + token);
+    },
+
+    // xcxc make use srp, and actually change password
+    resetPasswordAndLogin: function (token, newPassword) {
+      if (!token)
+        throw new Meteor.Error(400, "Need to pass token");
+      if (!newPassword)
+        throw new Meteor.Error(400, "Need to pass newPassword");
+
+      var user = Meteor.users.findOne({"services.password.reset.token": token});
+      if (!user)
+        throw new Meteor.Error(403, "Invalid token");
+      var loginToken = Meteor.accounts._loginTokens.insert({userId: user._id});
+      this.setUserId(user._id);
+      return {token: loginToken, id: user._id};
     }
   });
 

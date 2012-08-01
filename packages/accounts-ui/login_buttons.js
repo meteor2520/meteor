@@ -235,13 +235,12 @@
     var newPassword = document.getElementById('reset-password-new-password').value;
     // xcxc validate newPassword
 
-    // xcxc we need a new method that changes a password based on a reset password
-    // token, and then logs the user in.
-    Meteor.changePassword(/*xcxc*/null, newPassword, function (error) {
+    Meteor.call("resetPasswordAndLogin", resetPasswordToken, "xcxc", function (error, result) {
       if (error) {
-        // xcxc
+        alert(error.reason);
       } else {
         Session.set(IN_RESET_PASSWORD_FLOW_KEY, false);
+        Meteor.accounts.makeClientLoggedIn(result.id, result.token);
       }
     });
   };
@@ -250,9 +249,9 @@
 
   var match = window.location.pathname.match(/^\/accounts\/reset-password\/(.*)$/);
   if (match) {
-    // xcxc store token
-//    window.location.pathname = '/'; // ???
+    resetPasswordToken = match[1];
     Session.set(IN_RESET_PASSWORD_FLOW_KEY, true);
+//    window.location.pathname = '/'; // ???
   }
 
 
