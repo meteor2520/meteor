@@ -8,6 +8,7 @@
   var IN_FORGOT_PASSWORD_FLOW_KEY = 'Meteor.loginButtons.inForgotPasswordFlow';
   var ERROR_MESSAGE_KEY = 'Meteor.loginButtons.errorMessage';
   var INFO_MESSAGE_KEY = 'Meteor.loginButtons.infoMessage';
+  var IN_RESET_PASSWORD_FLOW_KEY = 'Meteor.loginButtons.inResetPasswordFlow';
 
   var resetSession = function () {
     Session.set(IN_SIGNUP_FLOW_KEY, false);
@@ -211,6 +212,48 @@
   Template.loginButtonsServicesDropdown.dropdownVisible = function () {
     return Session.get(DROPDOWN_VISIBLE_KEY);
   };
+
+  //
+  // xcxc
+  //
+
+  Template.resetPasswordForm.inResetPasswordFlow = function () {
+    return Session.get(IN_RESET_PASSWORD_FLOW_KEY);
+  };
+
+  Template.resetPasswordForm.events = {
+    'click #reset-password-button': function () {
+      resetPassword();
+    },
+    'keypress #reset-password-new-password': function (event) {
+      if (event.keyCode === 13)
+        resetPassword();
+    }
+  };
+
+  var resetPassword = function () {
+    var newPassword = document.getElementById('reset-password-new-password').value;
+    // xcxc validate newPassword
+
+    // xcxc we need a new method that changes a password based on a reset password
+    // token, and then logs the user in.
+    Meteor.changePassword(/*xcxc*/null, newPassword, function (error) {
+      if (error) {
+        // xcxc
+      } else {
+        Session.set(IN_RESET_PASSWORD_FLOW_KEY, false);
+      }
+    });
+  };
+
+  // xcxc
+
+  var match = window.location.pathname.match(/^\/accounts\/reset-password\/(.*)$/);
+  if (match) {
+    // xcxc store token
+//    window.location.pathname = '/'; // ???
+    Session.set(IN_RESET_PASSWORD_FLOW_KEY, true);
+  }
 
 
   //

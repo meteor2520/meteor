@@ -74,7 +74,7 @@
       // the old password.
 
       // XXX && Meteor.accounts.config.unsafePasswordChanges check here!
-      if (!options.M) {
+      if (!options.M && false /*xcxc*/) {
         throw new Meteor.Error(500, "XXX no oldPassword unimplemented");
       }
 
@@ -138,6 +138,28 @@
       var loginToken = Meteor.accounts._loginTokens.insert({userId: userId});
       this.setUserId(userId);
       return {token: loginToken, id: userId};
+    },
+
+    // xcxc expose client api
+    forgotPassword: function (options) {
+      var email = options.email;
+      if (!email)
+        throw new Meteor.Error(400, "Need to set options.email");
+
+      var user = Meteor.users.findOne({emails: email});
+      if (!user)
+        throw new Meteor.Error(403, "User not found");
+
+      var token = Meteor.uuid();
+      var creationTime = (new Date()).getTime();
+      Meteor.users.update(user._id, {$set: {"services.password.reset": {
+        token: token,
+        creationTime: creationTime
+      }}});
+
+      // xcxc
+      // xcxc construct url based on hostname? how do we know the hostname?
+      Meteor.mail.send(email, "token is " + token);
     }
   });
 
@@ -200,3 +222,11 @@
   });
 
 })();
+
+
+// xcxc
+Meteor.mail = {};
+Meteor.mail.send = function() {
+  console.log("Send mail:");
+  console.log(arguments);
+};

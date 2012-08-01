@@ -100,7 +100,7 @@
   <div class="login-link-and-dropdown-list">
     <a class="login-link-text">Sign in</a>
     {{#if dropdownVisible}}
-    <div id="login-dropdown-list">
+    <div id="login-dropdown-list" class="accounts-dialog">
       <a class="login-close-text">Close</a>
       <div class="login-close-text-clear"></div>
       {{> loginButtonsServicesRow}}
@@ -121,3 +121,24 @@
     </div>
   </div>
 </template>
+
+<template name="resetPasswordForm">
+  {{#if inResetPasswordFlow}}
+  <div class="hide-background"></div>
+
+  <div id="reset-password-form" class="accounts-dialog">
+    <label id="reset-password-new-password-label" for="reset-password-new-password">
+      New password
+    </label>
+    <input id="reset-password-new-password"/>
+
+    <div class="login-button login-button-form-submit" id="reset-password-button">
+      Reset password
+    </div>
+  </div>
+  {{/if}}
+</template>
+
+<body>
+  {{> resetPasswordForm}}
+</body>
